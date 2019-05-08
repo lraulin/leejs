@@ -7,4 +7,6 @@ const writeToFile = (text, file) => {
   stream.end();
 };
 
-module.exports = { writeToFile };
+const sortNums = arr => [...arr].sort((a, b) => a - b);
+
+module.exports = { writeToFile, sortNums };
