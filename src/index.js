@@ -1,15 +1,44 @@
 const fs = require("fs");
 
-const writeToFile = (text, file) => {
-  if (typeof text !== "string") text = JSON.stringify(text);
-  const stream = fs.createWriteStream(file, { flags: "a" });
-  stream.write(text + "\n");
-  stream.end();
-};
+const writeTextAsync = (path, text) =>
+  new Promise((res, rej) => {
+    fs.writeFile(path, text, "utf8", err => {
+      if (err) {
+        rej(err);
+      } else {
+        res(null);
+      }
+    });
+  });
+
+const writeJson = (path, obj) =>
+  fs.writeFile(path, JSON.stringify(obj), err => console.log(err));
+
+const writeJsonAsync = (path, obj) =>
+  new Promise((res, rej) => {
+    fs.writeFile(path, JSON.stringify(obj), err => {
+      if (err) {
+        rej(err);
+      } else {
+        res(null);
+      }
+    });
+  });
+
+const readFile = (path, opts = "utf8") =>
+  new Promise((res, rej) => {
+    fs.readFile(path, opts, (err, data) => {
+      if (err) rej(err);
+      else res(data);
+    });
+  });
+
+const readJsonFile = async path => JSON.parse(await readFile(path));
 
 // Return sorted copy of number array
 const sortNums = arr => [...arr].sort((a, b) => a - b);
 
+// Insert spaces in camelCaseText
 const camelSpace = text => text.replace(/([a-z])([A-Z])/g, "$1 $2");
 
 const capitalize = word => word[0].toUpperCase() + word.slice(1);
